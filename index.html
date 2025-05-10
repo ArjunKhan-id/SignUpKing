@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrasi Pengguna</title>
+  <style>
+    /* ... CSS kamu tetap sama ... */
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <div id="register-container">
+    <label for="name">Nama Lengkap</label>
+    <input type="text" id="name" placeholder="Masukkan nama lengkap" required />
+    
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Masukkan email" required />
+    
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Buat password" required />
+    
+    <button id="register-btn">Daftar</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBx2jh7CQJETDU1emLqvYcCUXqgff1btD0",
+      authDomain: "registrasiking.firebaseapp.com",
+      projectId: "registrasiking",
+      storageBucket: "registrasiking.firebasestorage.app",
+      messagingSenderId: "1008927663868",
+      appId: "1:1008927663868:web:c62a264a76b6d84fce9979"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const registerBtn = document.getElementById('register-btn');
+    const messageEl = document.getElementById('message');
+
+    registerBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      messageEl.textContent = '';
+      messageEl.style.color = 'red';
+
+      if (!name || !email || !password) {
+        messageEl.textContent = 'Semua field harus diisi.';
+        return;
+      }
+
+      if (password.length < 6) {
+        messageEl.textContent = 'Password minimal 6 karakter.';
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerBtn.textContent = 'Mendaftarkan...';
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const uid = userCredential.user.uid;
+          return db.collection("pengguna").doc(uid).set({
+            nama: name,
+            email: email
+          });
+        })
+        .then(() => {
+          messageEl.style.color = 'green';
+          messageEl.textContent = 'Registrasi berhasil!';
+          registerBtn.disabled = false;
+          registerBtn.textContent = 'Daftar';
+        })
+        .catch(error => {
+          messageEl.textContent = error.message;
+          registerBtn.disabled = false;
+          registerBtn.textContent = 'Daftar';
+        });
+    });
+  </script>
+</body>
+</html>
