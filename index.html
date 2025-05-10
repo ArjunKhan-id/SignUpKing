@@ -2,136 +2,174 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registrasi Pengguna</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 100%;
       height: 100vh;
+      background: #f4f6f8;
+      padding: 40px;
+      box-sizing: border-box;
+      transition: left 0.6s ease;
+    }
+
+    .slide.active {
+      left: 0;
     }
 
     #register-container {
-      background: white;
-      padding: 2rem;
+      background: #fff;
+      padding: 30px 40px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 320px;
+      margin: auto;
+      margin-top: 80px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
 
     input {
       width: 100%;
-      padding: 0.75rem;
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      border: 1.8px solid #ccc;
       border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
 
     button {
       width: 100%;
-      padding: 0.75rem;
-      background: #007bff;
-      color: white;
+      padding: 13px 0;
+      background-color: #4a90e2;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.15rem;
       cursor: pointer;
     }
 
     #message {
-      margin-top: 1rem;
+      margin-top: 15px;
+      font-weight: 700;
       text-align: center;
+      color: red;
+    }
+
+    #game-container {
+      text-align: center;
+      padding-top: 100px;
     }
   </style>
 
   <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBx2jh7CQJETDU1emLqvYcCUXqgff1btD0",
-      authDomain: "registrasiking.firebaseapp.com",
-      databaseURL: "https://registrasiking-default-rtdb.firebaseio.com",
-      projectId: "registrasiking",
-      storageBucket: "registrasiking.firebasestorage.app",
-      messagingSenderId: "1008927663868",
-      appId: "1:1008927663868:web:c62a264a76b6d84fce9979",
-      measurementId: "G-83G2KVC0N9"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const registerBtn = document.getElementById("register-btn");
-      const messageEl = document.getElementById("message");
-
-      registerBtn.addEventListener("click", async () => {
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-
-        messageEl.textContent = "";
-        messageEl.style.color = "red";
-
-        if (!name || !email || !password) {
-          messageEl.textContent = "Semua field harus diisi.";
-          return;
-        }
-
-        if (password.length < 6) {
-          messageEl.textContent = "Password minimal 6 karakter.";
-          return;
-        }
-
-        registerBtn.disabled = true;
-        registerBtn.textContent = "Mendaftarkan...";
-
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          const uid = userCredential.user.uid;
-
-          await setDoc(doc(db, "pengguna", uid), {
-            nama: name,
-            email: email
-          });
-
-          messageEl.style.color = "green";
-          messageEl.textContent = "Registrasi berhasil! Mengarahkan...";
-          setTimeout(() => {
-            window.location.href = "game.html";
-          }, 2000);
-        } catch (error) {
-          messageEl.textContent = error.message;
-        }
-
-        registerBtn.disabled = false;
-        registerBtn.textContent = "Daftar";
-      });
-    });
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
-  <div id="register-container">
-    <label for="name">Nama Lengkap</label>
-    <input type="text" id="name" placeholder="Masukkan nama lengkap" required />
-
-    <label for="email">Email</label>
-    <input type="email" id="email" placeholder="Masukkan email" required />
-
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Buat password" required />
-
-    <button id="register-btn">Daftar</button>
-    <div id="message"></div>
+  <div id="register-slide" class="slide active">
+    <div id="register-container">
+      <label for="name">Nama Lengkap</label>
+      <input type="text" id="name" placeholder="Masukkan nama lengkap" required />
+      
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Masukkan email" required />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Buat password" required />
+      
+      <button id="register-btn">Daftar</button>
+      <div id="message"></div>
+    </div>
   </div>
+
+  <div id="game-slide" class="slide">
+    <div id="game-container">
+      <h1>Selamat Datang di Game!</h1>
+      <p>Halaman ini siap menampilkan game kamu!</p>
+      <!-- Kamu bisa ganti dengan canvas, iframe, atau HTML game lainnya -->
+    </div>
+  </div>
+
+  <script>
+   
+      firebaseConfig = {
+  apiKey: "AIzaSyBx2jh7CQJETDU1emLqvYcCUXqgff1btD0",
+  authDomain: "registrasiking.firebaseapp.com",
+  databaseURL: "https://registrasiking-default-rtdb.firebaseio.com",
+  projectId: "registrasiking",
+  storageBucket: "registrasiking.firebasestorage.app",
+  messagingSenderId: "1008927663868",
+  appId: "1:1008927663868:web:c62a264a76b6d84fce9979",
+  measurementId: "G-83G2KVC0N9"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const registerBtn = document.getElementById('register-btn');
+    const messageEl = document.getElementById('message');
+
+    registerBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      messageEl.textContent = '';
+
+      if (!name || !email || !password) {
+        messageEl.textContent = 'Semua field harus diisi.';
+        return;
+      }
+
+      if (password.length < 6) {
+        messageEl.textContent = 'Password minimal 6 karakter.';
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerBtn.textContent = 'Mendaftarkan...';
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const uid = userCredential.user.uid;
+          return db.collection("pengguna").doc(uid).set({
+            nama: name,
+            email: email
+          });
+        })
+        .then(() => {
+          // Pindah ke slide game
+          document.getElementById('register-slide').classList.remove('active');
+          document.getElementById('game-slide').classList.add('active');
+        })
+        .catch(error => {
+          messageEl.textContent = error.message;
+        })
+        .finally(() => {
+          registerBtn.disabled = false;
+          registerBtn.textContent = 'Daftar';
+        });
+    });
+  </script>
 </body>
-      </html>
+    </html>
