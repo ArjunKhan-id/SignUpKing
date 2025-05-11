@@ -1,175 +1,416 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrasi Pengguna</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Kuis Sains SMP - Game Seru!</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  #game-slide {
+    background: #0c274c;
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 350px;
+    min-height: 500px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+  }
+  h1 {
+    margin: 0 0 1rem 0;
+    text-align: center;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    font-size: 1.8rem;
+    user-select: none;
+  }
+  #question-number {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.03em;
+  }
+  #question-text {
+    font-size: 1.3rem;
+    line-height: 1.4;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    user-select: none;
+  }
+  #answers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    flex-grow: 1;
+  }
+  button.answer-btn {
+    background: #145374;
+    border: none;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    user-select: none;
+    transition: background-color 0.25s ease, transform 0.15s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  button.answer-btn:active {
+    transform: scale(0.95);
+  }
+  button.answer-btn:hover:not(:disabled) {
+    background-color: #1e8ecd;
+  }
+  button.letter {
+    background: #007bbf;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    user-select: none;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  /* Feedback colors */
+  button.correct {
+    background-color: #2ecc71 !important;
+    box-shadow: 0 0 15px #27ae60;
+    color: #fff;
+  }
+  button.incorrect {
+    background-color: #e74c3c !important;
+    box-shadow: 0 0 15px #c0392b;
+    color: #fff;
+  }
+  #feedback {
+    margin-top: 1rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    min-height: 2rem;
+    user-select: none;
+    letter-spacing: 0.04em;
+  }
+  #score-slide {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #final-score {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+  #restart-btn {
+    background: #ff6f61;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.9rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 12px rgb(255 111 97 / 0.7);
+    transition: background-color 0.25s ease;
+    margin: 0 auto;
+  }
+  #restart-btn:hover {
+    background: #ff856f;
+  }
+  /* Responsive fits */
+  @media (max-width: 360px) {
+    #game-slide {
+      padding: 1rem;
+      min-height: 480px;
     }
-
-    .slide {
-      position: absolute;
-      top: 0;
-      left: 100%;
-      width: 100%;
-      height: 100vh;
-      background: #f4f6f8;
-      padding: 40px;
-      box-sizing: border-box;
-      transition: left 0.6s ease;
+    h1 {
+      font-size: 1.5rem;
     }
-
-    .slide.active {
-      left: 0;
+    #question-text {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
     }
-
-    #register-container {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      width: 320px;
-      margin: auto;
-      margin-top: 80px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 20px;
-      border: 1.8px solid #ccc;
-      border-radius: 8px;
+    button.answer-btn {
       font-size: 1rem;
-      box-sizing: border-box;
+      padding: 0.7rem 1rem;
     }
-
-    button {
-      width: 100%;
-      padding: 13px 0;
-      background-color: #4a90e2;
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.15rem;
-      cursor: pointer;
+    button.letter {
+      width: 28px;
+      height: 28px;
+      font-size: 0.9rem;
     }
-
-    #message {
-      margin-top: 15px;
-      font-weight: 700;
-      text-align: center;
-      color: red;
-    }
-
-    #game-container {
-      text-align: center;
-      padding-top: 100px;
-    }
-  </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  }
+</style>
 </head>
-
 <body>
-  <div id="register-slide" class="slide active">
-    <div id="register-container">
-      <label for="name">Nama Lengkap</label>
-      <input type="text" id="name" placeholder="Masukkan nama lengkap" required />
-      
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="Masukkan email" required />
-      
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Buat password" required />
-      
-      <button id="register-btn">Daftar</button>
-      <div id="message"></div>
-    </div>
+<div id="game-slide" role="main" aria-live="polite" aria-atomic="true">
+  <h1>Kuis Sains SMP</h1>
+  <div id="quiz-content">
+    <div id="question-number"></div>
+    <div id="question-text"></div>
+    <div id="answers"></div>
+    <div id="feedback" aria-live="assertive"></div>
   </div>
-
-  <div id="game-slide" class="slide">
-    <div id="game-container">
-      <h1>Selamat Datang di Game!</h1>
-      <p>Halaman ini siap menampilkan game kamu!</p>
-      <!-- Kamu bisa ganti dengan canvas, iframe, atau HTML game lainnya -->
-    </div>
+  <div id="score-slide" style="display:none;">
+    <div id="final-score"></div>
+    <button id="restart-btn" aria-label="Mulai ulang kuis">Mulai ulang Kuis</button>
   </div>
+</div>
 
-  <script>
-   
-      firebaseConfig = {
-  apiKey: "AIzaSyBx2jh7CQJETDU1emLqvYcCUXqgff1btD0",
-  authDomain: "registrasiking.firebaseapp.com",
-  databaseURL: "https://registrasiking-default-rtdb.firebaseio.com",
-  projectId: "registrasiking",
-  storageBucket: "registrasiking.firebasestorage.app",
-  messagingSenderId: "1008927663868",
-  appId: "1:1008927663868:web:c62a264a76b6d84fce9979",
-  measurementId: "G-83G2KVC0N9"
-};
+<script>
+(function(){
+  'use strict';
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+  // Questions bank - 10 sample questions covering given topics and examples
+  const questionsBank = [
+    {
+      question: "Apa satuan dari gaya dalam Fisika?",
+      answers: {
+        A: "Joule",
+        B: "Newton",
+        C: "Watt",
+        D: "Pascal"
+      },
+      correct: "B"
+    },
+    {
+      question: "Planet terbesar di Tata Surya adalah...",
+      answers: {
+        A: "Saturnus",
+        B: "Bumi",
+        C: "Jupiter",
+        D: "Uranus"
+      },
+      correct: "C"
+    },
+    {
+      question: "Organisme yang membuat makanan sendiri disebut...",
+      answers: {
+        A: "Herbivora",
+        B: "Heterotrof",
+        C: "Konsumen",
+        D: "Autotrof"
+      },
+      correct: "D"
+    },
+    {
+      question: "Ilmu yang mempelajari bumi dan segala fenomenanya disebut...",
+      answers: {
+        A: "Geologi",
+        B: "Biologi",
+        C: "Ilmu Bumi",
+        D: "Astronomi"
+      },
+      correct: "C"
+    },
+    {
+      question: "Apa fungsi dari akar pada tumbuhan?",
+      answers: {
+        A: "Menghasilkan klorofil",
+        B: "Menyerang hama",
+        C: "Menyerap air dan unsur hara",
+        D: "Tempat penyimpanan cadangan makanan"
+      },
+      correct: "C"
+    },
+    {
+      question: "Siapakah penemu teori gravitasi?",
+      answers: {
+        A: "Albert Einstein",
+        B: "Isaac Newton",
+        C: "Galileo Galilei",
+        D: "Nikola Tesla"
+      },
+      correct: "B"
+    },
+    {
+      question: "Lapisan atmosfer terdekat dengan permukaan bumi adalah...",
+      answers: {
+        A: "Stratosfer",
+        B: "Troposfer",
+        C: "Mesosfer",
+        D: "Eksosfer"
+      },
+      correct: "B"
+    },
+    {
+      question: "Apa nama planet terkecil di Tata Surya?",
+      answers: {
+        A: "Merkurius",
+        B: "Mars",
+        C: "Venus",
+        D: "Pluto"
+      },
+      correct: "A"
+    },
+    {
+      question: "Energi yang dihasilkan oleh tumbuhan melalui fotosintesis berasal dari...",
+      answers: {
+        A: "Air",
+        B: "Panas tanah",
+        C: "Sinar matahari",
+        D: "Karbon dioksida"
+      },
+      correct: "C"
+    },
+    {
+      question: "Organ tubuh manusia yang berfungsi sebagai pusat koordinasi adalah...",
+      answers: {
+        A: "Jantung",
+        B: "Otak",
+        C: "Paru-paru",
+        D: "Hati"
+      },
+      correct: "B"
+    }
+  ];
 
-    const registerBtn = document.getElementById('register-btn');
-    const messageEl = document.getElementById('message');
+  // Number of questions to ask in single game
+  const maxQuestions = 5;
 
-    registerBtn.addEventListener('click', () => {
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+  // State vars
+  let questionOrder = [];
+  let currentIndex = 0;
+  let score = 0;
+  let acceptingAnswers = true;
 
-      messageEl.textContent = '';
+  // DOM refs
+  const questionNumberEl = document.getElementById('question-number');
+  const questionTextEl = document.getElementById('question-text');
+  const answersEl = document.getElementById('answers');
+  const feedbackEl = document.getElementById('feedback');
+  const quizContentEl = document.getElementById('quiz-content');
+  const scoreSlideEl = document.getElementById('score-slide');
+  const finalScoreEl = document.getElementById('final-score');
+  const restartBtn = document.getElementById('restart-btn');
 
-      if (!name || !email || !password) {
-        messageEl.textContent = 'Semua field harus diisi.';
-        return;
+  function shuffleArray(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      // Swap
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  }
+
+  function startGame() {
+    // Reset
+    score = 0;
+    currentIndex = 0;
+    feedbackEl.textContent = '';
+    quizContentEl.style.display = "block";
+    scoreSlideEl.style.display = "none";
+    // Random question order
+    questionOrder = shuffleArray([...Array(questionsBank.length).keys()]).slice(0, maxQuestions);
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    acceptingAnswers = true;
+    feedbackEl.textContent = '';
+    const qIndex = questionOrder[currentIndex];
+    const currentQ = questionsBank[qIndex];
+
+    questionNumberEl.textContent = `Soal ${currentIndex + 1} dari ${maxQuestions}`;
+    questionTextEl.textContent = currentQ.question;
+
+    // Clear previous answers
+    answersEl.innerHTML = '';
+
+    // Create answer buttons A-D
+    for (const key of ['A','B','C','D']) {
+      const btn = document.createElement('button');
+      btn.classList.add('answer-btn');
+      btn.setAttribute('data-answer', key);
+      btn.type = "button";
+      btn.setAttribute('aria-label', `Jawaban ${key}: ${currentQ.answers[key]}`);
+      btn.innerHTML = `<span class="letter">${key}</span> ${currentQ.answers[key]}`;
+      btn.addEventListener('click', handleAnswerClick);
+      answersEl.appendChild(btn);
+    }
+  }
+
+  function handleAnswerClick(e) {
+    if (!acceptingAnswers) return;
+    acceptingAnswers = false;
+    const selectedBtn = e.currentTarget;
+    const selectedAnswer = selectedBtn.getAttribute('data-answer');
+
+    const qIndex = questionOrder[currentIndex];
+    const currentQ = questionsBank[qIndex];
+
+    // Disable all buttons
+    const buttons = answersEl.querySelectorAll('button');
+    buttons.forEach(b => b.disabled = true);
+
+    if (selectedAnswer === currentQ.correct) {
+      selectedBtn.classList.add('correct');
+      feedbackEl.textContent = 'Jawabanmu benar! 👍';
+      score++;
+    } else {
+      selectedBtn.classList.add('incorrect');
+      feedbackEl.textContent = `Jawaban salah. Jawaban benar: ${currentQ.correct}. ${currentQ.answers[currentQ.correct]}`;
+      // Highlight correct button
+      buttons.forEach(b => {
+        if(b.getAttribute('data-answer') === currentQ.correct) {
+          b.classList.add('correct');
+        }
+      });
+    }
+
+    // Move to next question after short delay
+    setTimeout(() => {
+      currentIndex++;
+      if (currentIndex < maxQuestions) {
+        loadQuestion();
+      } else {
+        showFinalScore();
       }
+    }, 1600);
+  }
 
-      if (password.length < 6) {
-        messageEl.textContent = 'Password minimal 6 karakter.';
-        return;
-      }
+  function showFinalScore() {
+    quizContentEl.style.display = "none";
+    scoreSlideEl.style.display = "flex";
+    finalScoreEl.textContent = `Skor kamu: ${score} dari ${maxQuestions}`;
+  }
 
-      registerBtn.disabled = true;
-      registerBtn.textContent = 'Mendaftarkan...';
+  restartBtn.addEventListener('click', startGame);
 
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          const uid = userCredential.user.uid;
-          return db.collection("pengguna").doc(uid).set({
-            nama: name,
-            email: email
-          });
-        })
-        .then(() => {
-          // Pindah ke slide game
-          document.getElementById('register-slide').classList.remove('active');
-          document.getElementById('game-slide').classList.add('active');
-        })
-        .catch(error => {
-          messageEl.textContent = error.message;
-        })
-        .finally(() => {
-          registerBtn.disabled = false;
-          registerBtn.textContent = 'Daftar';
-        });
-    });
-  </script>
+  startGame();
+
+})();
+</script>
 </body>
-    </html>
+</html> 
