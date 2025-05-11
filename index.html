@@ -1,416 +1,848 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Kuis Sains SMP - Game Seru!</title>
-<style>
-  /* Reset & base */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #00b4db, #0083b0);
-    color: #fff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-  #game-slide {
-    background: #0c274c;
-    border-radius: 16px;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 350px;
-    min-height: 500px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-  }
-  h1 {
-    margin: 0 0 1rem 0;
-    text-align: center;
-    font-weight: 900;
-    letter-spacing: 1.2px;
-    font-size: 1.8rem;
-    user-select: none;
-  }
-  #question-number {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    letter-spacing: 0.03em;
-  }
-  #question-text {
-    font-size: 1.3rem;
-    line-height: 1.4;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-    user-select: none;
-  }
-  #answers {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    flex-grow: 1;
-  }
-  button.answer-btn {
-    background: #145374;
-    border: none;
-    border-radius: 8px;
-    padding: 0.9rem 1rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: white;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    user-select: none;
-    transition: background-color 0.25s ease, transform 0.15s ease;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-  }
-  button.answer-btn:active {
-    transform: scale(0.95);
-  }
-  button.answer-btn:hover:not(:disabled) {
-    background-color: #1e8ecd;
-  }
-  button.letter {
-    background: #007bbf;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 900;
-    user-select: none;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  }
-  /* Feedback colors */
-  button.correct {
-    background-color: #2ecc71 !important;
-    box-shadow: 0 0 15px #27ae60;
-    color: #fff;
-  }
-  button.incorrect {
-    background-color: #e74c3c !important;
-    box-shadow: 0 0 15px #c0392b;
-    color: #fff;
-  }
-  #feedback {
-    margin-top: 1rem;
-    font-weight: 700;
-    font-size: 1.1rem;
-    text-align: center;
-    min-height: 2rem;
-    user-select: none;
-    letter-spacing: 0.04em;
-  }
-  #score-slide {
-    text-align: center;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  #final-score {
-    font-size: 2rem;
-    font-weight: 900;
-    margin-bottom: 1rem;
-    letter-spacing: 0.05em;
-  }
-  #restart-btn {
-    background: #ff6f61;
-    border: none;
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 0.9rem 1.5rem;
-    border-radius: 12px;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 6px 12px rgb(255 111 97 / 0.7);
-    transition: background-color 0.25s ease;
-    margin: 0 auto;
-  }
-  #restart-btn:hover {
-    background: #ff856f;
-  }
-  /* Responsive fits */
-  @media (max-width: 360px) {
-    #game-slide {
-      padding: 1rem;
-      min-height: 480px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kuis Sains SMP & SMA dengan Akun & Leaderboard</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
     }
-    h1 {
-      font-size: 1.5rem;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+      color: #f0f0f0;
+      overflow: hidden;
+      user-select: none;
     }
-    #question-text {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
+    #app {
+      width: 350px;
+      max-width: 100vw;
+      height: 600px;
+      max-height: 100vh;
+      margin: auto;
+      background: #1e2a47;
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    button.answer-btn {
-      font-size: 1rem;
-      padding: 0.7rem 1rem;
+    /* Slide container */
+    .slides {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      transition: transform 0.5s ease;
+      will-change: transform;
     }
-    button.letter {
-      width: 28px;
-      height: 28px;
+    .slide {
+      width: 350px;
+      max-width: 100vw;
+      padding: 20px 30px;
+      height: 100%;
+      flex-shrink: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+    /* General headings */
+    h1, h2 {
+      margin: 0 0 15px 0;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-align: center;
+    }
+    /* ----------- Slide 1 Login/Signup ----------- */
+    .form-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 100%;
+    }
+    label {
       font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #cbd5e1;
     }
-  }
-</style>
+    input[type=text], input[type=password], input[type=email] {
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: #2a3b65;
+      color: #f0f0f0;
+      transition: background 0.3s ease;
+      user-select: text;
+    }
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+      background: #3b527d;
+    }
+    button {
+      background: #0078d7;
+      border: none;
+      color: #fff;
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+      margin-top: 10px;
+    }
+    button:hover:not(:disabled) {
+      background: #005fa3;
+    }
+    button:disabled {
+      background: #555976;
+      cursor: default;
+    }
+    small.error {
+      color: #f44336;
+      font-size: 0.85rem;
+      min-height: 18px;
+      margin-top: -6px;
+    }
+    .toggle-login {
+      color: #80b3ff;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+    /* ----------- Slide 2 Home / Dashboard / Leaderboard ----------- */
+    #slide2-header {
+      margin-bottom: 10px;
+    }
+    .welcome-text {
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    /* Dashboard panel */
+    .dashboard {
+      background: #2a3b65;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+    .dashboard strong {
+      color: #80b3ff;
+    }
+    /* Leaderboard */
+    .leaderboard {
+      flex-grow: 1;
+      overflow-y: auto;
+      background: #2a3b65;
+      border-radius: 12px;
+      padding: 15px 20px;
+    }
+    .leaderboard h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .leaderboard-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .leaderboard-list li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      padding: 8px 0;
+      border-bottom: 1px solid #375a9a;
+      user-select: text;
+    }
+    .leaderboard-list li:last-child {
+      border-bottom: none;
+    }
+    .leaderboard-list .rank {
+      color: #80b3ff;
+      width: 30px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    /* Slide 2 controls */
+    #slide2-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    #slide2-buttons button {
+      background: #0078d7;
+      padding: 10px 26px;
+      font-size: 1rem;
+      border-radius: 12px;
+      user-select: none;
+      flex: 1;
+      max-width: 140px;
+    }
+    #slide2-buttons button:hover {
+      background: #005fa3;
+    }
+    /* ----------- Slide 3 Quiz (same as before but adapted) ----------- */
+    .question-number {
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    .question-text {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      line-height: 1.3;
+      min-height: 70px;
+      text-align: center;
+      user-select: none;
+    }
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+      user-select: none;
+    }
+    button.answer {
+      background: #2a3b65;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      color: #f0f0f0;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.3s ease;
+      box-shadow: inset 0 0 0 rgba(255,255,255,0);
+      user-select: none;
+    }
+    button.answer:hover {
+      background: #3c559f;
+    }
+    button.answer.correct {
+      background: #4CAF50;
+      box-shadow: inset 0 0 10px #4caf50;
+      color: #fff;
+    }
+    button.answer.incorrect {
+      background: #f44336;
+      box-shadow: inset 0 0 10px #f44336;
+      color: #fff;
+    }
+    button.answer:disabled {
+      cursor: default;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      user-select: none;
+    }
+    button#next-btn {
+      background: #0078d7;
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button#next-btn:disabled {
+      background: #555976;
+      cursor: default;
+    }
+    button#quit-btn {
+      background: #d9534f;
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button#quit-btn:hover {
+      background: #c9302c;
+    }
+    .score-area {
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      user-select: text;
+    }
+    .score-area h2 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+    }
+    .score-area p {
+      font-size: 1.1rem;
+      margin: 5px 0;
+    }
+    button#restart-btn-quiz {
+      background: #ff9800;
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      user-select: none;
+      margin-top: 20px;
+    }
+    button#restart-btn-quiz:hover {
+      background: #e68900;
+    }
+    /* Scrollbar for leaderboard and quiz answers on small devices */
+    .leaderboard,
+    .answers {
+      scrollbar-width: thin;
+      scrollbar-color: #375a9a transparent;
+    }
+    .leaderboard::-webkit-scrollbar,
+    .answers::-webkit-scrollbar {
+      width: 8px;
+    }
+    .leaderboard::-webkit-scrollbar-thumb,
+    .answers::-webkit-scrollbar-thumb {
+      background-color: #375a9a;
+      border-radius: 20px;
+    }
+    /* Responsive */
+    @media (max-width: 400px) {
+      #app {
+        width: 95vw;
+        height: 95vh;
+        padding: 15px 20px;
+      }
+      .slide {
+        width: 95vw;
+      }
+      .slides {
+        width: 285vw;
+      }
+      button, input[type=text], input[type=password], input[type=email] {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<div id="game-slide" role="main" aria-live="polite" aria-atomic="true">
-  <h1>Kuis Sains SMP</h1>
-  <div id="quiz-content">
-    <div id="question-number"></div>
-    <div id="question-text"></div>
-    <div id="answers"></div>
-    <div id="feedback" aria-live="assertive"></div>
+  <div id="app" aria-label="Aplikasi kuis sains dengan akun">
+    <div class="slides" id="slides">
+
+      <!-- Slide 1: Account Creation / Login -->
+      <section class="slide" aria-label="Halaman pendaftaran dan login user">
+        <h1>Daftar / Masuk Akun</h1>
+        <div class="form-container" role="form" aria-live="polite">
+          <form id="form-signup-login" novalidate>
+            <div id="signup-fields">
+              <label for="nickname">Nickname</label>
+              <input type="text" id="nickname" name="nickname" autocomplete="nickname" maxlength="20" required placeholder="Contoh: SiswaCerdas" />
+              <small id="nickname-error" class="error"></small>
+
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required placeholder="email@contoh.com" />
+              <small id="email-error" class="error"></small>
+            </div>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Minimal 6 karakter" />
+            <small id="password-error" class="error"></small>
+
+            <button type="submit" id="submit-btn">Daftar Akun</button>
+          </form>
+          <div class="toggle-login" id="toggle-to-login" tabindex="0" role="button" aria-pressed="false">Sudah punya akun? Masuk di sini</div>
+          <div class="toggle-login" id="toggle-to-signup" tabindex="0" role="button" aria-pressed="false" style="display:none;">Belum punya akun? Daftar di sini</div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Home / Dashboard / Leaderboard -->
+      <section class="slide" aria-label="Dashboard user, home dan leaderboard">
+        <h1 id="slide2-header">Selamat Datang!</h1>
+        <div class="welcome-text" id="welcome-text"></div>
+
+        <div class="dashboard" aria-label="Informasi akun user">
+          <p><strong>Nickname:</strong> <span id="dash-nickname"></span></p>
+          <p><strong>Email:</strong> <span id="dash-email"></span></p>
+          <p><strong>Skor Tertinggi:</strong> <span id="dash-best-score"></span></p>
+        </div>
+
+        <div class="leaderboard" aria-label="Daftar leaderboard pengguna terbaik">
+          <h2>Leaderboard Top 10</h2>
+          <ul class="leaderboard-list" id="leaderboard-list" tabindex="0" aria-live="polite" aria-relevant="additions"></ul>
+        </div>
+
+        <div id="slide2-buttons">
+          <button id="btn-start-quiz" aria-label="Mulai kuis">Mulai Kuis</button>
+          <button id="btn-logout" aria-label="Keluar dari akun">Logout</button>
+        </div>
+      </section>
+
+      <!-- Slide 3: Quiz -->
+      <section class="slide" aria-label="Halaman kuis sains">
+        <div class="question-number" id="question-number">Soal 1 / 40</div>
+        <div class="question-text" id="question-text" tabindex="0">...</div>
+        <div class="answers" id="answers" role="list" aria-label="Pilihan jawaban"></div>
+        <div class="controls">
+          <button id="quit-btn" aria-label="Batal kuis dan kembali ke dashboard">Batal</button>
+          <button id="next-btn" disabled aria-label="Soal berikutnya">Soal Berikutnya</button>
+        </div>
+        <div class="score-area" id="score-area" style="display:none;">
+          <h2>Skor Kamu</h2>
+          <p id="score-text"></p>
+          <button id="restart-btn-quiz" aria-label="Main lagi">Main Lagi</button>
+        </div>
+      </section>
+
+    </div>
   </div>
-  <div id="score-slide" style="display:none;">
-    <div id="final-score"></div>
-    <button id="restart-btn" aria-label="Mulai ulang kuis">Mulai ulang Kuis</button>
-  </div>
-</div>
 
 <script>
-(function(){
-  'use strict';
+  firebaseConfig = {
+  apiKey: "AIzaSyBx2jh7CQJETDU1emLqvYcCUXqgff1btD0",
+  authDomain: "registrasiking.firebaseapp.com",
+  databaseURL: "https://registrasiking-default-rtdb.firebaseio.com",
+  projectId: "registrasiking",
+  storageBucket: "registrasiking.firebasestorage.app",
+  messagingSenderId: "1008927663868",
+  appId: "1:1008927663868:web:c62a264a76b6d84fce9979",
+  measurementId: "G-83G2KVC0N9"
+};
+  /* Data and app logic */
 
-  // Questions bank - 10 sample questions covering given topics and examples
-  const questionsBank = [
-    {
-      question: "Apa satuan dari gaya dalam Fisika?",
-      answers: {
-        A: "Joule",
-        B: "Newton",
-        C: "Watt",
-        D: "Pascal"
-      },
-      correct: "B"
-    },
-    {
-      question: "Planet terbesar di Tata Surya adalah...",
-      answers: {
-        A: "Saturnus",
-        B: "Bumi",
-        C: "Jupiter",
-        D: "Uranus"
-      },
-      correct: "C"
-    },
-    {
-      question: "Organisme yang membuat makanan sendiri disebut...",
-      answers: {
-        A: "Herbivora",
-        B: "Heterotrof",
-        C: "Konsumen",
-        D: "Autotrof"
-      },
-      correct: "D"
-    },
-    {
-      question: "Ilmu yang mempelajari bumi dan segala fenomenanya disebut...",
-      answers: {
-        A: "Geologi",
-        B: "Biologi",
-        C: "Ilmu Bumi",
-        D: "Astronomi"
-      },
-      correct: "C"
-    },
-    {
-      question: "Apa fungsi dari akar pada tumbuhan?",
-      answers: {
-        A: "Menghasilkan klorofil",
-        B: "Menyerang hama",
-        C: "Menyerap air dan unsur hara",
-        D: "Tempat penyimpanan cadangan makanan"
-      },
-      correct: "C"
-    },
-    {
-      question: "Siapakah penemu teori gravitasi?",
-      answers: {
-        A: "Albert Einstein",
-        B: "Isaac Newton",
-        C: "Galileo Galilei",
-        D: "Nikola Tesla"
-      },
-      correct: "B"
-    },
-    {
-      question: "Lapisan atmosfer terdekat dengan permukaan bumi adalah...",
-      answers: {
-        A: "Stratosfer",
-        B: "Troposfer",
-        C: "Mesosfer",
-        D: "Eksosfer"
-      },
-      correct: "B"
-    },
-    {
-      question: "Apa nama planet terkecil di Tata Surya?",
-      answers: {
-        A: "Merkurius",
-        B: "Mars",
-        C: "Venus",
-        D: "Pluto"
-      },
-      correct: "A"
-    },
-    {
-      question: "Energi yang dihasilkan oleh tumbuhan melalui fotosintesis berasal dari...",
-      answers: {
-        A: "Air",
-        B: "Panas tanah",
-        C: "Sinar matahari",
-        D: "Karbon dioksida"
-      },
-      correct: "C"
-    },
-    {
-      question: "Organ tubuh manusia yang berfungsi sebagai pusat koordinasi adalah...",
-      answers: {
-        A: "Jantung",
-        B: "Otak",
-        C: "Paru-paru",
-        D: "Hati"
-      },
-      correct: "B"
-    }
+  // All questions (same as previously, 40 questions)
+  const questions = [
+    {question: "Apa fungsi dari akar dalam tumbuhan?",answers: [{text: "Membantu proses fotosintesis", correct: false},{text: "Menghisap air dan mineral dari tanah", correct: true},{text: "Mendukung proses respirasi", correct: false},{text: "Tempat penyimpanan hasil fotosintesis", correct: false}]},
+    {question: "Dalam sistem tata surya, planet terdekat dari Matahari adalah...",answers: [{text: "Venus", correct: false},{text: "Mars", correct: false},{text: "Merkurius", correct: true},{text: "Bumi", correct: false}]},
+    {question: "Suhu pada titik didih air adalah...",answers: [{text: "100 derajat Celsius", correct: true},{text: "0 derajat Celsius", correct: false},{text: "50 derajat Celsius", correct: false},{text: "212 derajat Celsius", correct: false}]},
+    {question: "Apa nama zat pembawa informasi genetik pada makhluk hidup?",answers: [{text: "Protein", correct: false},{text: "Karbohidrat", correct: false},{text: "DNA", correct: true},{text: "Lipid", correct: false}]},
+    {question: "Hukum Newton yang menyatakan \"Setiap aksi ada reaksi yang sama dan berlawanan arah\" adalah hukum ke-...",answers: [{text: "Pertama", correct: false},{text: "Kedua", correct: false},{text: "Ketiga", correct: true},{text: "Keempat", correct: false}]},
+    {question: "Manakah organ tubuh manusia yang berfungsi sebagai tempat pertukaran gas?",answers: [{text: "Jantung", correct: false},{text: "Paru-paru", correct: true},{text: "Hati", correct: false},{text: "Ginjal", correct: false}]},
+    {question: "Ciri-ciri makhluk hidup adalah...",answers: [{text: "Melakukan fotosintesis", correct: false},{text: "Bergerak, tumbuh, dan berkembang biak", correct: true},{text: "Memiliki sel", correct: false},{text: "Memerlukan air saja", correct: false}]},
+    {question: "Apa perubahan wujud zat dari cair menjadi gas disebut?",answers: [{text: "Menguap (evaporasi)", correct: true},{text: "Mencair", correct: false},{text: "Membeku", correct: false},{text: "Mengembun", correct: false}]},
+    {question: "Jenis energi yang berasal dari gerakan benda disebut...",answers: [{text: "Energi potensial", correct: false},{text: "Energi kinetik", correct: true},{text: "Energi panas", correct: false},{text: "Energi cahaya", correct: false}]},
+    {question: "Fotosintesis terjadi pada bagian tumbuhan yang disebut...",answers: [{text: "Akar", correct: false},{text: "Bunga", correct: false},{text: "Daun", correct: true},{text: "Batang", correct: false}]},
+
+    {question: "Apa rumus kimia dari asam sulfat?",answers: [{text: "HCl", correct: false},{text: "H2SO4", correct: true},{text: "NaOH", correct: false},{text: "CO2", correct: false}]},
+    {question: "Ion apa yang menyebabkan larutan bersifat asam?",answers: [{text: "OH-", correct: false},{text: "H+", correct: true},{text: "Na+", correct: false},{text: "SO4 2-", correct: false}]},
+    {question: "Sistem periodik unsur dikelompokkan berdasarkan...",answers: [{text: "Nomor atom", correct: true},{text: "Massa atom", correct: false},{text: "Jumlah neutron", correct: false},{text: "Sifat magnetik", correct: false}]},
+    {question: "Reaksi pembakaran merupakan contoh reaksi...",answers: [{text: "Eksotermik", correct: true},{text: "Endotermik", correct: false},{text: "Penguraian", correct: false},{text: "Pengendapan", correct: false}]},
+    {question: "Apa fungsi mitokondria pada sel?",answers: [{text: "Tempat sintesis protein", correct: false},{text: "Tempat respirasi sel", correct: true},{text: "Tempat penyimpanan lemak", correct: false},{text: "Tempat pembelahan sel", correct: false}]},
+    {question: "Apa wujud zat pada suhu dan tekanan kamar dari air?",answers: [{text: "Gas", correct: false},{text: "Cair", correct: true},{text: "Padat", correct: false},{text: "Plasma", correct: false}]},
+    {question: "Dalam fisika, satuan untuk gaya adalah...",answers: [{text: "Joule", correct: false},{text: "Newton", correct: true},{text: "Watt", correct: false},{text: "Pascal", correct: false}]},
+    {question: "Manakah yang merupakan sifat logam?",answers: [{text: "Bersifat isolator listrik", correct: false},{text: "Dapat ditempa dan ulet", correct: true},{text: "Mudah pecah", correct: false},{text: "Tidak berkilau", correct: false}]},
+    {question: "Fotosintesis menggunakan energi...",answers: [{text: "Listrik", correct: false},{text: "Panass", correct: false},{text: "Cahaya matahari", correct: true},{text: "Kimia", correct: false}]},
+    {question: "Reaksi kimia yang menghasilkan panas disebut...",answers: [{text: "Reaksi endotermik", correct: false},{text: "Reaksi eksotermik", correct: true},{text: "Reaksi redoks", correct: false},{text: "Reaksi netralisasi", correct: false}]},
+
+    {question: "Apa organ utama sistem peredaran darah pada manusia?",answers: [{text: "Paru-paru", correct: false},{text: "Jantung", correct: true},{text: "Hati", correct: false},{text: "Ginjal", correct: false}]},
+    {question: "Jenis energi apa yang dihasilkan oleh reaksi nuklir?",answers: [{text: "Energi kimia", correct: false},{text: "Energi nuklir", correct: true},{text: "Energi listrik", correct: false},{text: "Energi cahaya", correct: false}]},
+    {question: "Satuan untuk volume adalah...",answers: [{text: "Meter", correct: false},{text: "Liter", correct: true},{text: "Newton", correct: false},{text: "Watt", correct: false}]},
+    {question: "Apa warna spektrum cahaya yang dapat kita lihat terakhir saat pelangi?",answers: [{text: "Merah", correct: false},{text: "Ungu", correct: true},{text: "Hijau", correct: false},{text: "Kuning", correct: false}]},
+    {question: "Suhu pada titik beku air adalah...",answers: [{text: "0 derajat Celsius", correct: true},{text: "100 derajat Celsius", correct: false},{text: "50 derajat Celsius", correct: false},{text: "32 derajat Celsius", correct: false}]},
+    {question: "Apakah fungsi membran sel?",answers: [{text: "Melindungi dan mengatur keluar masuk zat", correct: true},{text: "Sebagai tempat produksi energi", correct: false},{text: "Tempat penyimpanan bahan genetik", correct: false},{text: "Tempat reaksi kimia", correct: false}]},
+    {question: "Apa yang terjadi pada zat saat mengalami pembekuan?",answers: [{text: "Berubah dari padat menjadi cair", correct: false},{text: "Berubah dari cair menjadi padat", correct: true},{text: "Berubah dari gas menjadi cair", correct: false},{text: "Berubah dari gas menjadi padat", correct: false}]},
+    {question: "Gaya yang membuat benda tetap berada di tempatnya disebut...",answers: [{text: "Gaya gravitasi", correct: false},{text: "Gaya gesek", correct: true},{text: "Gaya magnet", correct: false},{text: "Gaya dorong", correct: false}]},
+    {question: "Reaksi fotosintesis menghasilkan...",answers: [{text: "Oksigen dan glukosa", correct: true},{text: "Karbon dioksida dan air", correct: false},{text: "Glukosa dan karbondioksida", correct: false},{text: "Oksigen dan air", correct: false}]},
+    {question: "Satuan yang digunakan untuk mengukur suhu adalah...",answers: [{text: "Kelvin", correct: true},{text: "Pascal", correct: false},{text: "Newton", correct: false},{text: "Watt", correct: false}]},
+    {question: "Manakah unsur berikut yang termasuk logam alkali?",answers: [{text: "Natrium (Na)", correct: true},{text: "Karbon (C)", correct: false},{text: "Oksigen (O)", correct: false},{text: "Nitrogen (N)", correct: false}]},
+    {question: "Apa yang dimaksud dengan pH larutan 7?",answers: [{text: "Larutan asam", correct: false},{text: "Larutan basa", correct: false},{text: "Larutan netral", correct: true},{text: "Larutan garam", correct: false}]},
+    {question: "Manakah bagian terkecil dari unsur kimia?",answers: [{text: "Molekul", correct: false},{text: "Atom", correct: true},{text: "Ion", correct: false},{text: "Elektron", correct: false}]},
+    {question: "Apa yang terjadi pada suhu zat saat menerima energi panas?",answers: [{text: "Suhu zat naik", correct: true},{text: "Suhu zat turun", correct: false},{text: "Wujud zat berubah", correct: false},{text: "Suhu zat tetap", correct: false}]},
+    {question: "Vektor adalah besaran yang memiliki sifat...",answers: [{text: "Hanya besar", correct: false},{text: "Besar dan arah", correct: true},{text: "Hanya arah", correct: false},{text: "Tidak ada besar dan arah", correct: false}]},
+    {question: "Manakah sumber energi terbarukan berikut?",answers: [{text: "Batu bara", correct: false},{text: "Energi matahari", correct: true},{text: "Minyak bumi", correct: false},{text: "Gas alam", correct: false}]},
+    {question: "Apa fungsi enzim dalam proses biologis?",answers: [{text: "Menghancurkan molekul", correct: false},{text: "Mempercepat reaksi kimia", correct: true},{text: "Menyimpan energi", correct: false},{text: "Menghasilkan energi", correct: false}]},
+    {question: "Apa nama partikel bermuatan negatif dalam atom?",answers: [{text: "Proton", correct: false},{text: "Elektron", correct: true},{text: "Neutron", correct: false},{text: "Ion", correct: false}]},
+    {question: "Penyebab utama terjadinya gelombang laut adalah...",answers: [{text: "Gempa bumi", correct: false},{text: "Angin", correct: true},{text: "Pasang surut", correct: false},{text: "Gerak bumi", correct: false}]},
+    {question: "Manakah yang termasuk contoh energi kinetik?",answers: [{text: "Air yang mengalir", correct: true},{text: "Air yang diam", correct: false},{text: "Batu yang jatuh", correct: true},{text: "Kucing yang tidur", correct: false}]},
+    {question: "Berat jenis suatu zat adalah perbandingan antara berat zat dengan...",answers: [{text: "Volume zat lain", correct: false},{text: "Berat zat lain", correct: false},{text: "Volume air yang sama", correct: true},{text: "Massa air yang sama", correct: false}]},
+    {question: "Apa alat untuk mengukur suhu pada laboratorium?",answers: [{text: "Manometer", correct: false},{text: "Termometer", correct: true},{text: "Barometer", correct: false},{text: "Higrometer", correct: false}]}
   ];
 
-  // Number of questions to ask in single game
-  const maxQuestions = 5;
+  // Elements slide 1
+  const form = document.getElementById('form-signup-login');
+  const nicknameInput = document.getElementById('nickname');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const submitBtn = document.getElementById('submit-btn');
+  const toggleToLogin = document.getElementById('toggle-to-login');
+  const toggleToSignup = document.getElementById('toggle-to-signup');
+  const nicknameError = document.getElementById('nickname-error');
+  const emailError = document.getElementById('email-error');
+  const passwordError = document.getElementById('password-error');
 
-  // State vars
-  let questionOrder = [];
-  let currentIndex = 0;
+  // Elements slide 2
+  const welcomeText = document.getElementById('welcome-text');
+  const dashNickname = document.getElementById('dash-nickname');
+  const dashEmail = document.getElementById('dash-email');
+  const dashBestScore = document.getElementById('dash-best-score');
+  const leaderboardList = document.getElementById('leaderboard-list');
+  const btnStartQuiz = document.getElementById('btn-start-quiz');
+  const btnLogout = document.getElementById('btn-logout');
+
+  // Elements slide 3
+  const slides = document.getElementById('slides');
+  const questionNumberElem = document.getElementById("question-number");
+  const questionTextElem = document.getElementById("question-text");
+  const answersElem = document.getElementById("answers");
+  const nextBtn = document.getElementById("next-btn");
+  const quitBtn = document.getElementById("quit-btn");
+  const scoreArea = document.getElementById("score-area");
+  const scoreText = document.getElementById("score-text");
+  const restartBtnQuiz = document.getElementById("restart-btn-quiz");
+
+  // State variables
+  let users = {}; // all user accounts data {nickname: {email, password, bestScore}}
+  let currentUser = null;
+  let isLoginMode = false;
+  let currentQuestionIndex = 0;
   let score = 0;
-  let acceptingAnswers = true;
+  let answered = false;
 
-  // DOM refs
-  const questionNumberEl = document.getElementById('question-number');
-  const questionTextEl = document.getElementById('question-text');
-  const answersEl = document.getElementById('answers');
-  const feedbackEl = document.getElementById('feedback');
-  const quizContentEl = document.getElementById('quiz-content');
-  const scoreSlideEl = document.getElementById('score-slide');
-  const finalScoreEl = document.getElementById('final-score');
-  const restartBtn = document.getElementById('restart-btn');
-
-  function shuffleArray(array) {
-    let currentIndex = array.length, temporaryValue, randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      // Swap
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+  // Load users from localStorage
+  function loadUsers() {
+    const saved = localStorage.getItem('scienceQuizUsers');
+    if (saved) {
+      try {
+        users = JSON.parse(saved);
+      } catch {
+        users = {};
+      }
     }
-    return array;
+  }
+  function saveUsers() {
+    localStorage.setItem('scienceQuizUsers', JSON.stringify(users));
   }
 
-  function startGame() {
-    // Reset
+  // Save current session user
+  function saveCurrentUser(nickname) {
+    localStorage.setItem('scienceQuizCurrentUser', nickname);
+  }
+  // Load current session user
+  function loadCurrentUser() {
+    const nickname = localStorage.getItem('scienceQuizCurrentUser');
+    if (nickname && users[nickname]) {
+      currentUser = users[nickname];
+      currentUser.nickname = nickname;
+      return true;
+    }
+    return false;
+  }
+  // Clear current user session
+  function clearCurrentUser() {
+    localStorage.removeItem('scienceQuizCurrentUser');
+    currentUser = null;
+  }
+
+  // Validate email format (simple)
+  function validateEmail(email) {
+    // Simple regex for format validation
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
+  }
+  // Validate nickname format and existence
+  function validateNickname(nick){
+    // Allow letters, numbers, underscore, min 3 max 20 characters
+    return /^[a-zA-Z0-9_]{3,20}$/.test(nick);
+  }
+
+  // Clear errors
+  function clearErrors() {
+    nicknameError.textContent = '';
+    emailError.textContent = '';
+    passwordError.textContent = '';
+  }
+
+  // Switch between Signup and Login modes
+  function toggleMode() {
+    clearErrors();
+    isLoginMode = !isLoginMode;
+    if (isLoginMode) {
+      // Login mode: hide nickname and email fields, change submit button text
+      document.getElementById('nickname').parentElement.style.display = 'none';
+      document.getElementById('email').parentElement.style.display = 'none';
+      submitBtn.textContent = 'Masuk';
+      toggleToLogin.style.display = 'none';
+      toggleToSignup.style.display = 'block';
+    } else {
+      // Signup mode: show all fields
+      document.getElementById('nickname').parentElement.style.display = '';
+      document.getElementById('email').parentElement.style.display = '';
+      submitBtn.textContent = 'Daftar Akun';
+      toggleToLogin.style.display = 'block';
+      toggleToSignup.style.display = 'none';
+    }
+    nicknameInput.value = '';
+    emailInput.value = '';
+    passwordInput.value = '';
+  }
+
+  // Show slide by index (0,1,2)
+  function showSlide(index) {
+    slides.style.transform = `translateX(${-index * 350}px)`;
+    currentSlide = index;
+  }
+
+  function updateDashboard() {
+    dashNickname.textContent = currentUser.nickname;
+    dashEmail.textContent = currentUser.email;
+    dashBestScore.textContent = currentUser.bestScore !== undefined ? currentUser.bestScore : 'Belum ada';
+    welcomeText.textContent = `Halo, ${currentUser.nickname}! Semangat belajar sains!`;
+  }
+  // Build leaderboard array and UI
+  function updateLeaderboard() {
+    // Convert user object to array
+    let arr = Object.entries(users)
+      .filter(([nick, data]) => data.bestScore !== undefined)
+      .map(([nick, data]) => ({
+        nickname: nick,
+        score: data.bestScore,
+        email: data.email
+      }));
+    // Sort descending by score
+    arr.sort((a,b) => b.score - a.score);
+    const top10 = arr.slice(0,10);
+    leaderboardList.innerHTML = '';
+    if (top10.length === 0) {
+      leaderboardList.innerHTML = '<li>Belum ada skor yang tercatat.</li>';
+      return;
+    }
+    top10.forEach((user, idx) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="rank">${idx + 1}.</span><span>${user.nickname}</span><span>${user.score}</span>`;
+      leaderboardList.appendChild(li);
+    });
+  }
+
+  // Form submit handler
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    clearErrors();
+    const nick = nicknameInput.value.trim();
+    const email = emailInput.value.trim();
+    const pass = passwordInput.value.trim();
+    if (isLoginMode) {
+      // Login only user and password
+      if (!pass) {
+        passwordError.textContent = 'Password harus diisi';
+        return;
+      }
+      // Let's find user by nickname or email
+      // For simplicity, we ask user to enter nickname in password and email field is hidden
+      // Instead here we accept nickname in nicknameInput hidden or reuse it to hold nickname or email? 
+      // We will require nickname as identifier in login mode and password
+      if (!validateNickname(nick)) {
+        nicknameError.textContent = 'Nickname tidak valid';
+        return;
+      }
+      if (!(nick in users)) {
+        nicknameError.textContent = 'Nickname tidak terdaftar';
+        return;
+      }
+      if (users[nick].password !== pass) {
+        passwordError.textContent = 'Password salah';
+        return;
+      }
+      // Successful login
+      currentUser = {...users[nick]};
+      currentUser.nickname = nick;
+      saveCurrentUser(nick);
+      goToHomeSlide();
+      return;
+    } else {
+      // Signup mode validation
+      if (!nick) {
+        nicknameError.textContent = 'Nickname harus diisi';
+        return;
+      }
+      if (!validateNickname(nick)) {
+        nicknameError.textContent = 'Nickname harus 3-20 karakter dan alfanumerik/underscore';
+        return;
+      }
+      if (nick in users) {
+        nicknameError.textContent = 'Nickname sudah digunakan';
+        return;
+      }
+      if (!email) {
+        emailError.textContent = 'Email harus diisi';
+        return;
+      }
+      if (!validateEmail(email)) {
+        emailError.textContent = 'Email tidak valid';
+        return;
+      }
+      if (!pass || pass.length < 6) {
+        passwordError.textContent = 'Password minimal 6 karakter';
+        return;
+      }
+      // Also check if email is already used
+      const emails = Object.values(users).map(u => u.email.toLowerCase());
+      if (emails.includes(email.toLowerCase())) {
+        emailError.textContent = 'Email sudah terdaftar';
+        return;
+      }
+      // Create new user
+      users[nick] = {
+        email: email,
+        password: pass,
+        bestScore: undefined
+      };
+      saveUsers();
+      currentUser = {...users[nick], nickname: nick};
+      saveCurrentUser(nick);
+      goToHomeSlide();
+    }
+  });
+
+  toggleToLogin.addEventListener('click', toggleMode);
+  toggleToLogin.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') toggleMode(); });
+  toggleToSignup.addEventListener('click', toggleMode);
+  toggleToSignup.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') toggleMode(); });
+
+  // Slide 2 buttons
+  btnStartQuiz.addEventListener('click', () => {
+    startQuiz();
+    showSlide(2);
+  });
+  btnLogout.addEventListener('click', () => {
+    clearCurrentUser();
+    currentUser = null;
+    resetLoginForm();
+    showSlide(0);
+  });
+
+  // Slide 3 (Quiz) variables and handlers
+  function startQuiz() {
+    currentQuestionIndex = 0;
     score = 0;
-    currentIndex = 0;
-    feedbackEl.textContent = '';
-    quizContentEl.style.display = "block";
-    scoreSlideEl.style.display = "none";
-    // Random question order
-    questionOrder = shuffleArray([...Array(questionsBank.length).keys()]).slice(0, maxQuestions);
+    answered = false;
+    nextBtn.disabled = true;
+    scoreArea.style.display = "none";
+    questionNumberElem.style.display = "block";
+    questionTextElem.style.display = "block";
+    answersElem.style.display = "flex";
+    nextBtn.style.display = "inline-block";
+    quitBtn.style.display = "inline-block";
     loadQuestion();
   }
-
   function loadQuestion() {
-    acceptingAnswers = true;
-    feedbackEl.textContent = '';
-    const qIndex = questionOrder[currentIndex];
-    const currentQ = questionsBank[qIndex];
+    answered = false;
+    nextBtn.disabled = true;
+    resetQuizState();
+    let curQ = questions[currentQuestionIndex];
+    questionNumberElem.textContent = `Soal ${currentQuestionIndex +1} / ${questions.length}`;
+    questionTextElem.textContent = curQ.question;
 
-    questionNumberEl.textContent = `Soal ${currentIndex + 1} dari ${maxQuestions}`;
-    questionTextEl.textContent = currentQ.question;
-
-    // Clear previous answers
-    answersEl.innerHTML = '';
-
-    // Create answer buttons A-D
-    for (const key of ['A','B','C','D']) {
+    curQ.answers.forEach((answer,i) => {
       const btn = document.createElement('button');
-      btn.classList.add('answer-btn');
-      btn.setAttribute('data-answer', key);
-      btn.type = "button";
-      btn.setAttribute('aria-label', `Jawaban ${key}: ${currentQ.answers[key]}`);
-      btn.innerHTML = `<span class="letter">${key}</span> ${currentQ.answers[key]}`;
-      btn.addEventListener('click', handleAnswerClick);
-      answersEl.appendChild(btn);
-    }
+      btn.classList.add('answer');
+      btn.setAttribute('role','listitem');
+      btn.textContent = String.fromCharCode(65 + i) + '. ' + answer.text;
+      btn.dataset.correct = answer.correct;
+      btn.addEventListener('click', selectAnswer);
+      answersElem.appendChild(btn);
+    });
   }
-
-  function handleAnswerClick(e) {
-    if (!acceptingAnswers) return;
-    acceptingAnswers = false;
-    const selectedBtn = e.currentTarget;
-    const selectedAnswer = selectedBtn.getAttribute('data-answer');
-
-    const qIndex = questionOrder[currentIndex];
-    const currentQ = questionsBank[qIndex];
-
-    // Disable all buttons
-    const buttons = answersEl.querySelectorAll('button');
-    buttons.forEach(b => b.disabled = true);
-
-    if (selectedAnswer === currentQ.correct) {
+  function resetQuizState() {
+    while (answersElem.firstChild) answersElem.removeChild(answersElem.firstChild);
+  }
+  function selectAnswer(e) {
+    if (answered) return;
+    answered = true;
+    const selectedBtn = e.target;
+    const correct = selectedBtn.dataset.correct === "true";
+    if (correct) {
       selectedBtn.classList.add('correct');
-      feedbackEl.textContent = 'Jawabanmu benar! 👍';
       score++;
     } else {
       selectedBtn.classList.add('incorrect');
-      feedbackEl.textContent = `Jawaban salah. Jawaban benar: ${currentQ.correct}. ${currentQ.answers[currentQ.correct]}`;
-      // Highlight correct button
-      buttons.forEach(b => {
-        if(b.getAttribute('data-answer') === currentQ.correct) {
-          b.classList.add('correct');
-        }
-      });
     }
-
-    // Move to next question after short delay
-    setTimeout(() => {
-      currentIndex++;
-      if (currentIndex < maxQuestions) {
-        loadQuestion();
-      } else {
-        showFinalScore();
+    // Show correct answers
+    Array.from(answersElem.children).forEach(btn => {
+      if (btn.dataset.correct === "true") btn.classList.add('correct');
+      btn.disabled = true;
+    });
+    nextBtn.disabled = false;
+  }
+  nextBtn.addEventListener('click', () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+      loadQuestion();
+    } else {
+      showScore();
+    }
+  });
+  quitBtn.addEventListener('click', () => {
+    if(confirm('Apakah Anda yakin ingin keluar dari kuis? Skor tidak akan disimpan.')) {
+      showSlide(1);
+    }
+  });
+  restartBtnQuiz.addEventListener('click', () => {
+    startQuiz();
+  });
+  function showScore() {
+    // Store user's best score if higher
+    if (currentUser) {
+      if (currentUser.bestScore === undefined || score > currentUser.bestScore) {
+        users[currentUser.nickname].bestScore = score;
+        currentUser.bestScore = score;
+        saveUsers();
       }
-    }, 1600);
+    }
+    questionNumberElem.style.display = "none";
+    questionTextElem.style.display = "none";
+    answersElem.style.display = "none";
+    nextBtn.style.display = "none";
+    quitBtn.style.display = "none";
+    scoreArea.style.display = "flex";
+    scoreText.textContent = `Kamu menjawab benar ${score} dari ${questions.length} soal. Skor: ${(score / questions.length * 100).toFixed(0)}%`;
+    updateDashboard();
+    updateLeaderboard();
   }
 
-  function showFinalScore() {
-    quizContentEl.style.display = "none";
-    scoreSlideEl.style.display = "flex";
-    finalScoreEl.textContent = `Skor kamu: ${score} dari ${maxQuestions}`;
+  // Reset login form to initial
+  function resetLoginForm() {
+    form.reset();
+    clearErrors();
+    if (isLoginMode) toggleMode();
   }
 
-  restartBtn.addEventListener('click', startGame);
+  // When loading the app
+  loadUsers();
+  if(loadCurrentUser()) {
+    goToHomeSlide();
+  } else {
+    showSlide(0);
+  }
 
-  startGame();
+  function goToHomeSlide(){
+    updateDashboard();
+    updateLeaderboard();
+    showSlide(1);
+  }
 
-})();
 </script>
 </body>
-</html> 
+</html>
+
