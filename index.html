@@ -389,26 +389,55 @@
 </style>
 </head>
 <body>
+  
   <div id="main-container">
-    <!-- Slide Registrasi -->
-    <section id="register-slide" class="slide active">
-      <div class="register-container">
-        <h2>Registrasi</h2>
-        <form id="register-form">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Masukkan email" required />
-          
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Minimal 6 karakter" required minlength="6" />
-          
-          <div id="message"></div>
-          
-          <button type="submit" id="register-btn">Daftar</button>
-        </form>
-        <a id="go-to-login">Sudah punya akun? Login</a>
-      </div>
-    </section>
+<!-- Slide Registrasi - GANTI DENGAN INI -->
+<section id="register-slide" class="slide active">
+  <div class="register-container">
+    <h2>Selamat Datang</h2>
+    <p style="text-align:center; margin-bottom:20px;">Silakan login untuk melanjutkan ke kuis</p>
+    
+    <div id="message"></div>
+    <style>
+   /* Spinner untuk loading button */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+} 
+  </style>
+    <!-- Tombol Login Google -->
+    <button id="google-login-btn" style="background: #fff; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+      Login dengan Google
+    </button>
+    
+    <!-- Tombol Login Email/Password (opsional) -->
+    <button id="email-login-btn" style="margin-top: 15px; background: transparent; border: 2px solid #fff;">
+      Login dengan Email
+    </button>
+    
+    <!-- Login Email Form (hidden by default) -->
+    <div id="email-login-form" style="display:none; margin-top: 15px;">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Masukkan email" />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Minimal 6 karakter" />
+      
+      <button id="login-btn">Login</button>
+      <button id="register-btn" style="margin-top: 10px; background: #ff7043;">Daftar Baru</button>
+    </div>
+  </div>
+        </section>
     <!-- Slide Verifikasi -->
     <section id="verify-slide" class="slide">
       <div class="verify-container">
@@ -649,73 +678,233 @@
     });
     
     // Lanjutkan ke kuis
-    proceedToQuizBtn.addEventListener('click', async () => {
-      const user = auth.currentUser;
+<script>
+(function(){
+  'use strict';
+  
+  // Firebase Config (tetap sama)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwtJYQPYCXGaHNhSxc0v_kv1GS8MNAGXI",
+    authDomain: "kuis-b4cb8.firebaseapp.com",
+    projectId: "kuis-b4cb8",
+    storageBucket: "kuis-b4cb8.firebasestorage.app",
+    messagingSenderId: "842499241086",
+    appId: "1:842499241086:web:53f914ca316ad77119142f"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  
+  // Setup Google Provider
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  googleProvider.setCustomParameters({
+    prompt: 'select_account'
+  });
+  
+  // DOM Elements
+  const registerSlide = document.getElementById('register-slide');
+  const verifySlide = document.getElementById('verify-slide');
+  const quizSlide = document.getElementById('quiz-slide');
+  const messageEl = document.getElementById('message');
+  const googleLoginBtn = document.getElementById('google-login-btn');
+  const emailLoginBtn = document.getElementById('email-login-btn');
+  const emailLoginForm = document.getElementById('email-login-form');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+  const resendBtn = document.getElementById('resend-verification-btn');
+  const proceedToQuizBtn = document.getElementById('proceed-to-quiz-btn');
+  const backToProfileBtn = document.getElementById('back-to-profile-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  
+  // ==================== GOOGLE LOGIN ====================
+  googleLoginBtn.addEventListener('click', async () => {
+    try {
+      googleLoginBtn.disabled = true;
+      googleLoginBtn.innerHTML = '<span class="spinner"></span> Menghubungkan...';
       
-      if (!user) {
-        Swal.fire({
-          title: 'Tidak Ada Pengguna',
-          text: 'Silakan login terlebih dahulu.',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        });
-        showSlide(registerSlide, verifySlide);
+      const result = await auth.signInWithPopup(googleProvider);
+      const user = result.user;
+      
+      console.log('Google login berhasil:', user.displayName, user.email);
+      
+      // User dari Google sudah otomatis terverifikasi
+      Swal.fire({
+        title: 'Selamat Datang!',
+        text: `Halo ${user.displayName || user.email}!`,
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      
+      // Langsung ke kuis
+      startQuiz();
+      showSlide(quizSlide, registerSlide);
+      
+    } catch (error) {
+      console.error('Google login error:', error);
+      
+      let errorMessage = 'Gagal login dengan Google';
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = 'Popup login ditutup';
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        errorMessage = 'Login dibatalkan';
+      }
+      
+      Swal.fire({
+        title: 'Login Gagal',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'Coba Lagi'
+      });
+    } finally {
+      googleLoginBtn.disabled = false;
+      googleLoginBtn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20"> Login dengan Google';
+    }
+  });
+  
+  // ==================== EMAIL/PASSWORD LOGIN (OPSIONAL) ====================
+  emailLoginBtn.addEventListener('click', () => {
+    emailLoginForm.style.display = emailLoginForm.style.display === 'none' ? 'block' : 'none';
+  });
+  
+  // Login dengan Email
+  if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      if (!email || !password) {
+        showMessage('Email dan password harus diisi', 'error');
         return;
       }
       
-      // Reload user untuk mendapatkan status verifikasi terbaru
-      await user.reload();
+      try {
+        loginBtn.disabled = true;
+        await auth.signInWithEmailAndPassword(email, password);
+        showMessage('Login berhasil!', 'success');
+      } catch (error) {
+        showMessage('Login gagal: ' + error.message, 'error');
+      } finally {
+        loginBtn.disabled = false;
+      }
+    });
+  }
+  
+  // Register dengan Email
+  if (registerBtn) {
+    registerBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
       
+      if (!email || !password) {
+        showMessage('Email dan password harus diisi', 'error');
+        return;
+      }
+      
+      try {
+        registerBtn.disabled = true;
+        const result = await auth.createUserWithEmailAndPassword(email, password);
+        
+        // Kirim email verifikasi
+        await result.user.sendEmailVerification();
+        
+        showMessage('Registrasi berhasil! Silakan verifikasi email', 'success');
+        setTimeout(() => showSlide(verifySlide, registerSlide), 1500);
+        
+      } catch (error) {
+        showMessage('Registrasi gagal: ' + error.message, 'error');
+      } finally {
+        registerBtn.disabled = false;
+      }
+    });
+  }
+  
+  // ==================== CEK STATUS USER ====================
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log('User logged in:', user.email, 'Verified:', user.emailVerified);
+      
+      // Simpan data user
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || user.email.split('@')[0],
+        photoURL: user.photoURL,
+        verified: user.emailVerified,
+        provider: user.providerData[0]?.providerId || 'password'
+      };
+      localStorage.setItem('quizUser', JSON.stringify(userData));
+      
+      // Jika login via Google, langsung terverifikasi
+      if (userData.provider === 'google.com' || user.emailVerified) {
+        startQuiz();
+        showSlide(quizSlide, registerSlide);
+        showSlide(quizSlide, verifySlide);
+      } else {
+        // Email/Password yang belum diverifikasi
+        showSlide(verifySlide, registerSlide);
+      }
+    } else {
+      // Tidak ada user
+      localStorage.removeItem('quizUser');
+      showSlide(registerSlide, verifySlide);
+      showSlide(registerSlide, quizSlide);
+    }
+  });
+  
+  // ==================== VERIFIKASI & LAIN-LAIN ====================
+  // Resend verification email
+  resendBtn.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await user.sendEmailVerification();
+        Swal.fire('Terkirim!', 'Cek email Anda untuk verifikasi.', 'success');
+      } catch (error) {
+        Swal.fire('Gagal!', error.message, 'error');
+      }
+    }
+  });
+  
+  // Proceed to quiz
+  proceedToQuizBtn.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (user) {
+      await user.reload();
       if (user.emailVerified) {
         startQuiz();
         showSlide(quizSlide, verifySlide);
       } else {
-        Swal.fire({
-          title: 'Email Belum Diverifikasi',
-          text: 'Silakan verifikasi email Anda terlebih dahulu. Cek inbox atau spam.',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        });
-      }
-    });
-    
-    // Logout
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await auth.signOut();
-        showSlide(registerSlide, verifySlide);
-      } catch (error) {
-        Swal.fire({
-          title: 'Gagal Logout',
-          text: error.message,
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      }
-    });
-    
-    // Kembali ke profil
-    backToProfileBtn.addEventListener('click', () => {
-      showSlide(verifySlide, quizSlide);
-    });
-    
-    // Fungsi kirim email verifikasi
-    async function sendVerificationEmail(user) {
-      try {
-        await user.sendEmailVerification();
-      } catch (error) {
-        console.error('Gagal mengirim email verifikasi:', error);
+        Swal.fire('Belum Verifikasi', 'Silakan verifikasi email Anda terlebih dahulu.', 'warning');
       }
     }
-    
-    // Fungsi tampilkan pesan
-    function showMessage(msg, type) {
-      messageEl.textContent = msg;
-      messageEl.className = '';
-      if (type === 'success') {
-        messageEl.classList.add('success-msg');
-      }
-    }
+  });
+  
+  // Logout
+  logoutBtn.addEventListener('click', async () => {
+    await auth.signOut();
+    showSlide(registerSlide, verifySlide);
+    showSlide(registerSlide, quizSlide);
+  });
+  
+  // Back to profile
+  backToProfileBtn.addEventListener('click', () => {
+    showSlide(verifySlide, quizSlide);
+  });
+  
+  // Fungsi tampilkan pesan
+  function showMessage(msg, type) {
+    messageEl.textContent = msg;
+    messageEl.className = type === 'success' ? 'success-msg' : '';
+  }
+  
+  // ==================== KUIS ====================
+  // ... (kode kuis tetap sama)
+  
+})();
+</script>
     
     // ==================== KUIS ====================
     
