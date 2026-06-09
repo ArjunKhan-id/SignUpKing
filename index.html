@@ -738,6 +738,644 @@
         showConfirmButton: false
       });
       
+      //     background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+  
+  input::placeholder {
+    color: #dddbdd;
+  }
+  
+  button {
+    width: 100%;
+    padding: 14px 0;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: #6c63ff;
+    color: white;
+    box-shadow: 0 8px 15px rgba(108,99,255,0.6);
+    transition: background-color 0.3s ease;
+  }
+  
+  button:disabled {
+    background: #a59fff;
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background: #5248cc;
+  }
+  
+  #message {
+    color: #ff6961;
+    font-weight: 700;
+    min-height: 1.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .success-msg {
+    color: #7ced9f;
+  }
+  
+  a {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
+    color: #d3cfff;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  /* Slide Verifikasi */
+  #verify-slide {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+  }
+  
+  .verify-container {
+    width: 350px;
+    max-width: 95vw;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px 28px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+  }
+  
+  #verify-slide p {
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  
+  /* Slide Kuis */
+  #quiz-slide {
+    background: linear-gradient(135deg, #2980b9, #6dd5fa);
+  }
+  
+  #quiz-container {
+    background: #1f3c88;
+    max-width: 350px;
+    width: 100%;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    height: 600px;
+  }
+  
+  h1 {
+    font-weight: 900;
+    letter-spacing: 1.4px;
+    margin: 0 0 1rem 0;
+    font-size: 1.9rem;
+    text-align: center;
+  }
+  
+  #question-number {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.06em;
+  }
+  
+  #question-text {
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    user-select: none;
+    min-height: 70px;
+  }
+  
+  #answers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  
+  button.answer-btn {
+    background: #356ab9;
+    border: none;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 4px 9px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease, transform 0.15s ease;
+  }
+  
+  button.answer-btn:hover:not(:disabled) {
+    background-color: #4a7cd3;
+  }
+  
+  button.answer-btn:active {
+    transform: scale(0.95);
+  }
+  
+  button.answer-btn[disabled] {
+    cursor: default;
+  }
+  
+  .letter {
+    background: #1976d2;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-weight: 900;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  
+  button.correct {
+    background-color: #27ae60 !important;
+    box-shadow: 0 0 15px #27ae60;
+  }
+  
+  button.incorrect {
+    background-color: #e74c3c !important;
+    box-shadow: 0 0 15px #c0392b;
+  }
+  
+  #feedback {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 1rem;
+    min-height: 2rem;
+    letter-spacing: 0.04em;
+    user-select: none;
+  }
+  
+  #score-slide {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+  }
+  
+  #final-score {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+  }
+  
+  #restart-btn {
+    background: #ff7043;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.9rem 1.6rem;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(255,112,67,0.7);
+    transition: background-color 0.25s ease;
+    margin: 0 auto;
+    width: auto;
+  }
+  
+  #restart-btn:hover {
+    background: #ff8a65;
+  }
+  
+  #back-to-profile-btn {
+    margin-top: 10px;
+    width: auto;
+    background: #6c63ff;
+    box-shadow: 0 6px 12px rgba(108,99,255,0.7);
+  }
+  
+  #back-to-profile-btn:hover {
+    background: #5248cc;
+  }
+  
+  /* Scrollbar */
+  #answers::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #answers::-webkit-scrollbar-thumb {
+    background-color: #1976d2;
+    border-radius: 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 400px) {
+    .register-container, .verify-container {
+      padding: 20px;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    #quiz-container {
+      padding: 1.2rem 1.2rem 1.8rem 1.2rem;
+      max-width: 95vw;
+      height: 600px;
+    }
+    
+    h1 {
+      font-size: 1.6rem;
+    }
+    
+    #question-text {
+      font-size: 1.1rem;
+      min-height: 60px;
+      margin-bottom: 0.9rem;
+    }
+    
+    button.answer-btn {
+      font-size: 1rem;
+      padding: 0.8rem 1rem;
+    }
+    
+    .letter {
+      width: 28px;
+      height: 28px;
+      font-size: 0.9rem;
+    }
+    
+    #final-score {
+      font-size: 1.7rem;
+    }
+  }
+</style>
+</head>
+<body>
+  
+  <div id="main-container">
+<!-- Slide Registrasi - GANTI DENGAN INI -->
+<section id="register-slide" class="slide active">
+  <div class="register-container">
+    <h2>Selamat Datang</h2>
+    <p style="text-align:center; margin-bottom:20px;">Silakan login untuk melanjutkan ke kuis</p>
+    
+    <div id="message"></div>
+    <style>
+   /* Spinner untuk loading button */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+} 
+  </style>
+    <!-- Tombol Login Google -->
+    <button id="google-login-btn" style="background: #fff; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" height="20">
+      Login dengan Google
+    </button>
+    
+    <!-- Tombol Login Email/Password (opsional) -->
+    <button id="email-login-btn" style="margin-top: 15px; background: transparent; border: 2px solid #fff;">
+      Login dengan Email
+    </button>
+    
+    <!-- Login Email Form (hidden by default) -->
+    <div id="email-login-form" style="display:none; margin-top: 15px;">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Masukkan email" />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Minimal 6 karakter" />
+      
+      <button id="login-btn">Login</button>
+      <button id="register-btn" style="margin-top: 10px; background: #ff7043;">Daftar Baru</button>
+    </div>
+  </div>
+        </section>
+    <!-- Slide Verifikasi -->
+    <section id="verify-slide" class="slide">
+      <div class="verify-container">
+        <h2>Verifikasi Email</h2>
+        <p>Email verifikasi telah dikirim ke alamat email Anda. Silakan cek inbox dan klik link verifikasi.</p>
+        <p>Setelah verifikasi, klik tombol di bawah untuk melanjutkan.</p>
+        <button id="proceed-to-quiz-btn">Lanjutkan ke Kuis</button>
+        <button id="resend-verification-btn" style="margin-top: 10px; background: #ff7043;">Kirim Ulang Email Verifikasi</button>
+        <a id="logout-btn" style="margin-top: 10px;">Logout</a>
+      </div>
+    </section>
+
+    <!-- Slide Kuis -->
+    <section id="quiz-slide" class="slide">
+      <div id="quiz-container" role="main" aria-live="polite" aria-atomic="true">
+        <h1>Kuis STEM SD-SMP-SMA</h1>
+        <div id="quiz-content">
+          <div id="question-number"></div>
+          <div id="question-text"></div>
+          <div id="answers"></div>
+          <div id="feedback" aria-live="assertive"></div>
+        </div>
+        <div id="score-slide" style="display:none;">
+          <div id="final-score"></div>
+          <button id="restart-btn" aria-label="Mulai ulang kuis">Main Lagi</button>
+          <button id="back-to-profile-btn">Kembali ke Profil</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <!-- SweetAlert JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+  (function(){
+    'use strict';
+    
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAwtJYQPYCXGaHNhSxc0v_kv1GS8MNAGXI",
+      authDomain: "kuis-b4cb8.firebaseapp.com",
+      projectId: "kuis-b4cb8",
+      storageBucket: "kuis-b4cb8.firebasestorage.app",
+      messagingSenderId: "842499241086",
+      appId: "1:842499241086:web:53f914ca316ad77119142f"
+    };
+    
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch (e) {
+      console.warn("Firebase already initialized or error:", e);
+    }
+    
+    const auth = firebase.auth();
+    
+    // DOM Elements
+    const registerSlide = document.getElementById('register-slide');
+    const verifySlide = document.getElementById('verify-slide');
+    const quizSlide = document.getElementById('quiz-slide');
+    const messageEl = document.getElementById('message');
+    const registerForm = document.getElementById('register-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const registerBtn = document.getElementById('register-btn');
+    const resendBtn = document.getElementById('resend-verification-btn');
+    const proceedToQuizBtn = document.getElementById('proceed-to-quiz-btn');
+    const backToProfileBtn = document.getElementById('back-to-profile-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const goToLogin = document.getElementById('go-to-login');
+    
+    // Quiz DOM Elements
+    const questionNumberEl = document.getElementById('question-number');
+    const questionTextEl = document.getElementById('question-text');
+    const answersEl = document.getElementById('answers');
+    const feedbackEl = document.getElementById('feedback');
+    const quizContentEl = document.getElementById('quiz-content');
+    const scoreSlideEl = document.getElementById('score-slide');
+    const finalScoreEl = document.getElementById('final-score');
+    const restartBtn = document.getElementById('restart-btn');
+    
+    // Fungsi transisi slide
+    function showSlide(showEl, hideEl) {
+      if (hideEl) {
+        hideEl.classList.remove('active');
+        hideEl.classList.add('exit-left');
+        setTimeout(() => {
+          hideEl.classList.remove('exit-left');
+        }, 600);
+      }
+      if (showEl) {
+        setTimeout(() => {
+          showEl.classList.add('active');
+        }, 100);
+      }
+    }
+    
+    // ==================== AUTENTIKASI ====================
+    
+    // Cek status login
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        if (user.emailVerified) {
+          // User sudah verifikasi, langsung ke kuis
+          startQuiz();
+          showSlide(quizSlide, registerSlide);
+          showSlide(quizSlide, verifySlide);
+        } else {
+          // User belum verifikasi
+          showSlide(verifySlide, registerSlide);
+          // Kirim email verifikasi
+          sendVerificationEmail(user);
+        }
+      } else {
+        // User belum login
+        showSlide(registerSlide, verifySlide);
+        showSlide(registerSlide, quizSlide);
+      }
+    });
+    
+    // Registrasi
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      if (!email || !password) {
+        showMessage('Email dan password harus diisi', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showMessage('Password minimal 6 karakter', 'error');
+        return;
+      }
+      
+      try {
+        registerBtn.disabled = true;
+        registerBtn.textContent = 'Mendaftar...';
+        
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        // Kirim email verifikasi
+        await sendVerificationEmail(user);
+        
+        showMessage('Registrasi berhasil! Silakan verifikasi email Anda.', 'success');
+        
+        // Pindah ke slide verifikasi
+        setTimeout(() => {
+          showSlide(verifySlide, registerSlide);
+        }, 1500);
+        
+      } catch (error) {
+        let errorMessage = 'Terjadi kesalahan';
+        
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = 'Email sudah terdaftar';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'Format email tidak valid';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'Password terlalu lemah';
+            break;
+          default:
+            errorMessage = error.message;
+        }
+        
+        showMessage(errorMessage, 'error');
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.textContent = 'Daftar';
+      }
+    });
+    
+    // Login (simulasi sederhana, karena hanya ada form registrasi)
+    goToLogin.addEventListener('click', () => {
+      Swal.fire({
+        title: 'Login',
+        html: `
+          <input id="login-email" class="swal2-input" placeholder="Email" type="email">
+          <input id="login-password" class="swal2-input" placeholder="Password" type="password">
+        `,
+        confirmButtonText: 'Login',
+        preConfirm: async () => {
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+          
+          if (!email || !password) {
+            Swal.showValidationMessage('Email dan password harus diisi');
+            return false;
+          }
+          
+          try {
+            await auth.signInWithEmailAndPassword(email, password);
+            return true;
+          } catch (error) {
+            Swal.showValidationMessage(error.message);
+            return false;
+          }
+        }
+      });
+    });
+    
+    // Kirim ulang email verifikasi
+    resendBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          resendBtn.disabled = true;
+          resendBtn.textContent = 'Mengirim...';
+          await sendVerificationEmail(user);
+          Swal.fire({
+            title: 'Berhasil!',
+            text: 'Email verifikasi telah dikirim ulang.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        } catch (error) {
+          Swal.fire({
+            title: 'Gagal!',
+            text: 'Gagal mengirim email verifikasi. Coba lagi nanti.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } finally {
+          resendBtn.disabled = false;
+          resendBtn.textContent = 'Kirim Ulang Email Verifikasi';
+        }
+      }
+    });
+    
+    // Lanjutkan ke kuis
+<script>
+(function(){
+  'use strict';
+  
+  // Firebase Config (tetap sama)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwtJYQPYCXGaHNhSxc0v_kv1GS8MNAGXI",
+    authDomain: "kuis-b4cb8.firebaseapp.com",
+    projectId: "kuis-b4cb8",
+    storageBucket: "kuis-b4cb8.firebasestorage.app",
+    messagingSenderId: "842499241086",
+    appId: "1:842499241086:web:53f914ca316ad77119142f"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  
+  // Setup Google Provider
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  googleProvider.setCustomParameters({
+    prompt: 'select_account'
+  });
+  
+  // DOM Elements
+  const registerSlide = document.getElementById('register-slide');
+  const verifySlide = document.getElementById('verify-slide');
+  const quizSlide = document.getElementById('quiz-slide');
+  const messageEl = document.getElementById('message');
+  const googleLoginBtn = document.getElementById('google-login-btn');
+  const emailLoginBtn = document.getElementById('email-login-btn');
+  const emailLoginForm = document.getElementById('email-login-form');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+  const resendBtn = document.getElementById('resend-verification-btn');
+  const proceedToQuizBtn = document.getElementById('proceed-to-quiz-btn');
+  const backToProfileBtn = document.getElementById('back-to-profile-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  
+  // ==================== GOOGLE LOGIN ====================
+  googleLoginBtn.addEventListener('click', async () => {
+    try {
+      googleLoginBtn.disabled = true;
+      googleLoginBtn.innerHTML = '<span class="spinner"></span> Menghubungkan...';
+      
+      const result = await auth.signInWithPopup(googleProvider);
+      const user = result.user;
+      
+      console.log('Google login berhasil:', user.displayName, user.email);
+      
+      // User dari Google sudah otomatis terverifikasi
+      Swal.fire({
+        title: 'Selamat Datang!',
+        text: `Halo ${user.displayName || user.email}!`,
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      
       // Langsung ke kuis
       startQuiz();
       showSlide(quizSlide, registerSlide);
